@@ -1,0 +1,6 @@
+deploy/*
+src/oldcontainerstuff/*
+
+
+.vscode/*
+*.code-workspace
