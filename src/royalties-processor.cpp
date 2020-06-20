@@ -192,16 +192,18 @@ int main() {
     std::vector<std::string> header = readCsvLine(master);
 
     // get index of columns to process 
-    int idWriters, idType, idFinalAmount=-1, idInitialAmount;
-    bool createFinalColumn = false;
-    for(int i=0; i<header.size(); i++) {
+    std::size_t idWriters, idType, idFinalAmount, idInitialAmount;
+    bool createFinalColumn = true;
+    for(std::size_t i=0; i<header.size(); i++) {
         if(header[i] == config::WRITERS) idWriters=i;
         else if(header[i] == config::RIGHT_TYPE_GROUP) idType=i;
-        else if(header[i] == config::FINAL_DISTRIBUTED_AMOUNT) idFinalAmount=i;
         else if(header[i] == config::DISTRIBUTED_AMOUNT) idInitialAmount = i;
+        else if(header[i] == config::FINAL_DISTRIBUTED_AMOUNT) {
+            idFinalAmount=i;
+            createFinalColumn=false;
+        }
     }
-    if(idFinalAmount==-1) { // will need to create new column for final amount in output files
-        createFinalColumn = true;
+    if(createFinalColumn) { // will need to create new column for final amount in output files
         log::log(std::cout, "No Final Distributed Amount column found in input. This column will be created in the output files.", log::level::INFO);
     }
 
@@ -331,5 +333,7 @@ int main() {
 
     std::cout << "Total Final Distributed Amount: " << totalFDR << std::endl;
 
+    std::cout << "Press enter to close...";
+    std::cin.get(); // pause
     return 0;
 }
